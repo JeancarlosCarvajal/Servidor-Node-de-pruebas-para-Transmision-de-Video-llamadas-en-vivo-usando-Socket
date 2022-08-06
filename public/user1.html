@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Socket Server</title>
+
+    <style>
+      .container {
+        display: grid;
+        justify-items: center;
+      }
+    </style>
+</head>
+<body>
+
+
+    <div class="container">
+
+      <h1 style="text-align: center;">Usuario #1</h1>
+      <button id="btn">Emitir</button>
+
+      <video src="" id="video" style="width: 800px; height: 600px" autoplay="true"></video>
+      <canvas id="canvas"></canvas>
+
+      <div id="status"></div>
+
+    </div>
+
+
+    <script src="socket.io/socket.io.js"></script>
+    <script src="js/socket.js"></script>
+
+    <script>
+
+
+        // Inicio Funciones
+        var canvas = document.getElementById('canvas');
+        var context = canvas.getContext('2d');
+        var btn = document.getElementById('btn');
+
+        canvas.style.display = 'none';
+        canvas.width = 512;
+        canvas.height = 384;
+
+        context.width = canvas.width;
+        context.height = canvas.height;
+
+        var video = document.getElementById('video');
+
+        // funcion publica mensaje
+        function publicarMensaje(msg) {
+          document.getElementById('status').innerHTML = msg;
+        }
+
+        function loadCamera(stream) { 
+          video.srcObject = stream;
+          publicarMensaje('Camara Funcionando');
+        }
+
+        function errorCamera() {
+          publicarMensaje('Camara ha Fallado');
+        }
+
+        function verVideo(video, context) {
+          context.drawImage(video, 0, 0, context.width, context.height);  
+          socket.emit('stream', canvas.toDataURL('image/webp', 0.6)); 
+        }
+ 
+ 
+        btn.addEventListener('click', ()=>{
+          navigator.getUserMedia = (navigator.getUserMedia || navigator.webkitGetUserMedia || navigator.mozGetUserMedia || navigator.mozGetUserMedia);
+          if(navigator.getUserMedia){
+            navigator.getUserMedia({video:true}, loadCamera, errorCamera);
+          }
+          verVideo(video, context); 
+          var intervalo = setInterval(() => { 
+            verVideo(video, context);
+          }, 50); 
+        });
+
+        // Fin funciones
+
+
+
+
+
+
+
+    </script>
+</body>
+</html>
