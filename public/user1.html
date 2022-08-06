@@ -21,7 +21,8 @@
       <h1 style="text-align: center;">Usuario #1</h1>
       <button id="btn">Emitir</button>
 
-      <video src="" id="video" style="width: 800px; height: 600px" autoplay="true"></video>
+      <video src="" id="video" autoplay="true"></video>  
+      <!-- style="width: 800px; height: 600px"  -->
       <canvas id="canvas"></canvas>
 
       <div id="status"></div>
@@ -41,13 +42,17 @@
         var btn = document.getElementById('btn');
 
         canvas.style.display = 'none';
-        canvas.width = 512;
-        canvas.height = 384;
+        // canvas.width = 512;
+        // canvas.height = 384;
 
-        context.width = canvas.width;
-        context.height = canvas.height;
+        // context.width = canvas.width;
+        // context.height = canvas.height;
 
         var video = document.getElementById('video');
+
+        console.log(video.clientHeight);
+        console.log(video.clientWidth);
+        
 
         // funcion publica mensaje
         function publicarMensaje(msg) {
@@ -63,22 +68,39 @@
           publicarMensaje('Camara ha Fallado');
         }
 
-        function verVideo(video, context) {
-          context.drawImage(video, 0, 0, context.width, context.height);  
+        function verVideo(video, context) { 
+          // canvas.width = video.clientHeight;
+          // canvas.height = video.clientWidth;
+          context.drawImage(video, 0, 0, context.width, context.height);
           socket.emit('stream', canvas.toDataURL('image/webp', 0.6)); 
         }
  
  
-        btn.addEventListener('click', ()=>{
+        // btn.addEventListener('click', ()=>{
           navigator.getUserMedia = (navigator.getUserMedia || navigator.webkitGetUserMedia || navigator.mozGetUserMedia || navigator.mozGetUserMedia);
           if(navigator.getUserMedia){
             navigator.getUserMedia({video:true}, loadCamera, errorCamera);
           }
-          verVideo(video, context); 
-          var intervalo = setInterval(() => { 
-            verVideo(video, context);
-          }, 50); 
-        }); 
+          
+          setTimeout(() => {
+            console.log("5 Segundo esperado");
+
+            // console.log(video.clientHeight);
+            // console.log(video.clientWidth);    
+
+            canvas.width = video.clientWidth;
+            canvas.height = video.clientHeight;
+            
+            context.width = canvas.width;
+            context.height = canvas.height;
+ 
+            var intervalo = setInterval(() => { 
+              verVideo(video, context);
+            }, 100); 
+
+          }, 5000);
+         
+        // }); 
         // Fin funciones
   
     </script>
