@@ -81,6 +81,16 @@
           if(navigator.getUserMedia){
             navigator.getUserMedia({video:true}, loadCamera, errorCamera);
           }
+
+          // navigator.mediaDevices.getUserMedia({
+          //   video:true,
+          //   audio:true
+          // }).then((stream)=>{
+          //   // Some more code
+
+          // }).catch(err=>{
+          //     alert(err.message)
+          // });
           
           setTimeout(() => {
             console.log("5 Segundo esperado");
